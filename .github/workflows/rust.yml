@@ -1,22 +1,27 @@
-name: Rust
+name: Build
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-env:
-  CARGO_TERM_COLOR: always
+  workflow_dispatch:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v4
+      - name: Build
+        run: cargo build --release
+      - name: Test
+        run: cargo test --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rustcord-${{ matrix.os }}
+          path: |
+            target/release/rustcord-server
+            target/release/rustcord-server.exe
+            target/release/rustcord-client
+            target/release/rustcord-client.exe
+          if-no-files-found: ignore
