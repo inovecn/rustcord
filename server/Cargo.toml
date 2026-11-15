@@ -1,0 +1,15 @@
+[package]
+name = "rustcord-server"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rustcord_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rustcord-server"
+path = "src/main.rs"
+
+[dependencies]
+rustcord-proto = { path = "../proto" }
